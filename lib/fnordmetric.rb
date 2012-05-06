@@ -149,6 +149,7 @@ module FnordMetric
 end
 
 require "fnordmetric/api"
+require "fnordmetric/udp_client"
 require "fnordmetric/inbound_stream"
 require "fnordmetric/inbound_datagram"
 require "fnordmetric/worker"
