@@ -78,6 +78,7 @@ module FnordMetric
   def self.run
     start_em
   rescue Exception => e
+    raise e
     log "!!! eventmachine died, restarting... #{e.message}"
     sleep(1); run
   end
