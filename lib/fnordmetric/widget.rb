@@ -28,7 +28,7 @@ class FnordMetric::Widget
     else
       @gauges = gauges
     end
-    
+
     if (ticks = gauges.map{ |g| g.tick }).uniq.length == 1
       @tick = ticks.first
     elsif !!self.try(:has_tick?)
@@ -62,12 +62,12 @@ class FnordMetric::Widget
   def include_current?
     !(@opts[:include_current] == false)
   end
-    
+
   def data
-    { 
-      :title => @opts[:title], 
+    {
+      :title => @opts[:title],
       :width => @opts[:width] || 100,
-      :klass => self.class.name.split("::").last 
+      :klass => self.class.name.split("::").last
     }
   end
 

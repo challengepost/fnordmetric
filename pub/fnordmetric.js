@@ -83,7 +83,7 @@ var FnordMetric = (function(){
   }
 
   function formatPercentValue(value){
-    return value + '%';  
+    return value + '%';
   }
 
   function formatGaugeValue(gauge_key, value){
@@ -191,24 +191,23 @@ var FnordMetric = (function(){
         'marginBottom': 20,
         'overflow': 'hidden'
       });
-			
+
 			var container = $('<div></div>')
         .addClass('html_container')
 				.html(opts.html);
-			
+
 			opts.elem.append(container);
 		}
-		
+
 		function updateValues(opts){}
 		function updatedisplay(opts, diff_factor){}
-	
+
 		return {
 			render: render
 		};
 	}
 
   var numbersWidget = function(){
-
 
     function render(opts){
 
@@ -232,7 +231,6 @@ var FnordMetric = (function(){
               .addClass('title')
               .html(gtitle)
           );
-
 
         $(opts.offsets).each(function(n, offset){
           var _off, _nextoff, _sum;
@@ -995,8 +993,8 @@ var FnordMetric = (function(){
           ).append(
             $('<span class="history"></span>').html('history')
             .click(function(){
-              setCheckboxesCheckedState(true, false);              
-              updateEventFilter(); 
+              setCheckboxesCheckedState(true, false);
+              updateEventFilter();
               loadEventHistory({session_key: session_data["session_key"]});
             })
           ).attr('data-session', session_data["session_key"])
@@ -1106,7 +1104,7 @@ var FnordMetric = (function(){
       if(widget.klass=='NumbersWidget'){ numbersWidget().render(widget); }
       if(widget.klass=='ToplistWidget'){ toplistWidget().render(widget); }
       if(widget.klass=='PieWidget'){ pieWidget().render(widget); }
-			if(widget.klass=="HtmlWidget") { htmlWidget().render(widget); }
+      if(widget.klass=="HtmlWidget") { htmlWidget().render(widget); }
     };
 
     function resizeWidget(wkey){
