@@ -27,8 +27,15 @@ class FnordMetric::Session
     set_key = "#{opts[:namespace_prefix]}-session"
     limit = (opts[:limit].try(:to_i)||0)-1
     session_ids = opts[:redis].zrevrange(set_key, 0, limit, :withscores => true)
-    session_ids.in_groups_of(2).map do |session_key, ts|
-      find(session_key, opts).tap{ |s| s.updated_at = ts }
+
+    unless session_ids.first.is_a?(Array)
+      session_ids = session_ids.in_groups_of(2).map do |session_id, ts|
+        [session_id, Float(ts)]
+      end
+    end
+
+    session_ids.map do |session_key, ts|
+      find(session_key, opts).tap{ |s| s.updated_at = "%.f" % ts }
     end
   end
 
@@ -97,8 +104,8 @@ class FnordMetric::Session
   end
 
   def add_event_data(event)
-    event.each do |key,value|
-      add_data(key, value) unless key[0]=="_"
+    event.each do |key, value|
+      add_data(key, value) unless key.to_s.starts_with?("_")
     end
   end
 
@@ -109,7 +116,7 @@ class FnordMetric::Session
   def fetch_data!
     @data = Hash.new
     @redis.hgetall(redis_key(:data)).each do |key, value|    
-      if key[0]=="_" 
+      if key.to_s.starts_with?("_")
         fetch_meta_key(key, value)
       else      
         @data[key.intern] = value 

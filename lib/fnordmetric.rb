@@ -7,11 +7,13 @@ require 'sinatra/base'
 require 'haml'
 require 'rack/server'
 
+require "fnordmetric/ext"
 require "fnordmetric/version"
 
 module FnordMetric
 
   @@namespaces = {}
+  @@server_configuration = nil
 
   def self.namespace(key=nil, &block)
     @@namespaces[key] = block
@@ -76,6 +78,7 @@ module FnordMetric
   def self.run
     start_em
   rescue Exception => e
+    raise e
     log "!!! eventmachine died, restarting... #{e.message}"
     sleep(1); run
   end
@@ -146,6 +149,7 @@ module FnordMetric
 end
 
 require "fnordmetric/api"
+require "fnordmetric/udp_client"
 require "fnordmetric/inbound_stream"
 require "fnordmetric/inbound_datagram"
 require "fnordmetric/worker"
