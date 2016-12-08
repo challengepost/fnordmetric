@@ -83,7 +83,7 @@ var FnordMetric = (function(){
   }
 
   function formatPercentValue(value){
-    return value + '%';  
+    return value + '%';
   }
 
   function formatGaugeValue(gauge_key, value){
@@ -191,24 +191,23 @@ var FnordMetric = (function(){
         'marginBottom': 20,
         'overflow': 'hidden'
       });
-			
+
 			var container = $('<div></div>')
         .addClass('html_container')
 				.html(opts.html);
-			
+
 			opts.elem.append(container);
 		}
-		
+
 		function updateValues(opts){}
 		function updatedisplay(opts, diff_factor){}
-	
+
 		return {
 			render: render
 		};
 	}
 
   var numbersWidget = function(){
-
 
     function render(opts){
 
@@ -232,7 +231,6 @@ var FnordMetric = (function(){
               .addClass('title')
               .html(gtitle)
           );
-
 
         $(opts.offsets).each(function(n, offset){
           var _off, _nextoff, _sum;
@@ -368,7 +366,7 @@ var FnordMetric = (function(){
           var series_data = [];
 
           for(p in raw_data){
-            series_data.push([parseInt(p)*1000, raw_data[p]||0]);
+            series_data.push([parseInt(p)*1000, parseFloat(raw_data[p])||0]);
             max_y = Math.max(max_y, raw_data[p]);
           }
 
@@ -382,7 +380,9 @@ var FnordMetric = (function(){
             });
           }
 
-          chart.yAxis[0].setExtremes(0,max_y);
+          if (opts.plot_style != 'area')
+            chart.yAxis[0].setExtremes(0, max_y);
+
           chart.redraw();
 
           // shown on the *first* gauge load
@@ -432,6 +432,12 @@ var FnordMetric = (function(){
       }
 
       function drawChart(){
+        var plotOptions = { line: { shadow: false, lineWidth: 3 } };
+
+        if (opts.plot_options) {
+          plotOptions = opts.plot_options;
+        }
+
         chart = new Highcharts.Chart({
           chart: {
             renderTo: 'container-'+widget_uid,
@@ -446,11 +452,7 @@ var FnordMetric = (function(){
             title: (opts.x_title||''),
             labels: { step: 2 }
           },
-          yAxis: {
-            title: (opts.y_title||''),
-            min: 0,
-            max: 1000
-          },
+          yAxis: { title: (opts.y_title||'') },
           legend: {
             layout: 'horizontal',
             align: 'top',
@@ -460,12 +462,7 @@ var FnordMetric = (function(){
             margin: 25,
             borderWidth: 0
           },
-          plotOptions: {
-            line: {
-              shadow: false,
-              lineWidth: 3
-            }
-          }
+          plotOptions: plotOptions
         });
       }
 
@@ -995,8 +992,8 @@ var FnordMetric = (function(){
           ).append(
             $('<span class="history"></span>').html('history')
             .click(function(){
-              setCheckboxesCheckedState(true, false);              
-              updateEventFilter(); 
+              setCheckboxesCheckedState(true, false);
+              updateEventFilter();
               loadEventHistory({session_key: session_data["session_key"]});
             })
           ).attr('data-session', session_data["session_key"])
@@ -1106,7 +1103,7 @@ var FnordMetric = (function(){
       if(widget.klass=='NumbersWidget'){ numbersWidget().render(widget); }
       if(widget.klass=='ToplistWidget'){ toplistWidget().render(widget); }
       if(widget.klass=='PieWidget'){ pieWidget().render(widget); }
-			if(widget.klass=="HtmlWidget") { htmlWidget().render(widget); }
+      if(widget.klass=="HtmlWidget") { htmlWidget().render(widget); }
     };
 
     function resizeWidget(wkey){
